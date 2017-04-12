@@ -37,10 +37,20 @@ jobsRouter.get("/:id", function showSpecificJob(req, res, next) {
   console.log(jobs, "This is req.params");
   let correctJob = jobs.filter(function specificJobId(job) {
     return job.id === req.params.id;
+
   });
   console.log(correctJob);
 
   res.json(correctJob);
+});
+
+jobsRouter.delete("/:id", function deleteSpecificJob(req, res, next) {
+  jobs.forEach(function jobToDelete(job, index) {
+     if (job.id === req.params.id) {
+       res.json(job);
+       jobs.splice(index, 1);
+     }
+  });
 });
 
 module.exports = jobsRouter;

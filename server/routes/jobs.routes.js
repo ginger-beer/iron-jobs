@@ -33,24 +33,32 @@ function addAJob(req, res, next) {
 }
 jobsRouter.post("/", addAJob);
 
-jobsRouter.get("/:id", function showSpecificJob(req, res, next) {
-  console.log(jobs, "This is req.params");
+/**
+  * Allows you to show a specific job based on individual id
+  * @param {Object} req Identifies the specific job we would like to view based on id
+  * @param {Object} res Displays the job we slect via id
+**/
+function showSpecificJob(req, res, next) {
   let correctJob = jobs.filter(function specificJobId(job) {
     return job.id === req.params.id;
-
   });
-  console.log(correctJob);
-
   res.json(correctJob);
-});
+}
+jobsRouter.get("/:id", showSpecificJob);
 
-jobsRouter.delete("/:id", function deleteSpecificJob(req, res, next) {
+/**
+  * Allows you to delete a specific job via its individual id
+  * @param {Object} req Identifies the job to be deletd
+  * @param {Object} res Displays the job to be deleted
+**/
+function deleteSpecificJob(req, res, next) {
   jobs.find(function jobToDelete(job, index) {
      if (job.id === req.params.id) {
        res.json(job);
        jobs.splice(index, 1);
      }
   });
-});
+}
+jobsRouter.delete("/:id", deleteSpecificJob);
 
 module.exports = jobsRouter;

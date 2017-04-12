@@ -17,6 +17,13 @@ jobsRouter.get("/", function showAllJobs(req, res, next) {
 **/
 function addAJob(req, res, next) {
   console.log("This shows req.body", req.body);
+
+  if (!(req.body.company && req.body.link && req.body.notes)) {
+    let err = new Error("Please give required job information");
+    err.status = 400;
+    return next(err);
+  }
+
   let newJob = req.body;
   newJob.createTime = Date.now();
   jobs.push(req.body);

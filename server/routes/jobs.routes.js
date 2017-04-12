@@ -26,11 +26,21 @@ function addAJob(req, res, next) {
 
   let newJob = req.body;
   newJob.createTime = Date.now();
-  jobs.push(req.body);
-  console.log(newJob.createTime);
+  newJob.id = JSON.stringify(Date.now());
+  jobs.push(newJob);
 
   res.json({message: 'I sucessfully posted to the rosaCO site'});
 }
 jobsRouter.post("/", addAJob);
+
+jobsRouter.get("/:id", function showSpecificJob(req, res, next) {
+  console.log(jobs, "This is req.params");
+  let correctJob = jobs.filter(function specificJobId(job) {
+    return job.id === req.params.id;
+  });
+  console.log(correctJob);
+
+  res.json(correctJob);
+});
 
 module.exports = jobsRouter;

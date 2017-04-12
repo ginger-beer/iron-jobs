@@ -45,7 +45,7 @@ jobsRouter.get("/:id", function showSpecificJob(req, res, next) {
 });
 
 jobsRouter.delete("/:id", function deleteSpecificJob(req, res, next) {
-  jobs.forEach(function jobToDelete(job, index) {
+  jobs.find(function jobToDelete(job, index) {
      if (job.id === req.params.id) {
        res.json(job);
        jobs.splice(index, 1);

@@ -7,6 +7,11 @@ jobsRouter.get("/", function showAllJobs(req, res, next) {
   res.json(jobs);
 });
 
+/**
+  * This function adds a new job to the current array of jobs
+  * @param {Object} req Must have a body like: {company: String, link: String, notes: String}
+  * @param {Object} res The response will contain the message: {message: 'I sucessfully posted to the rosaCO site'}
+**/
 function addAJob(req, res, next) {
   console.log("This shows req.body", req.body);
 

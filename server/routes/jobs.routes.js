@@ -7,7 +7,6 @@ jobsRouter.get("/", function showAllJobs(req, res, next) {
   jobs.forEach(function infoWeNeed(job) {
     jobsCollection.push({id: job.id, company: job.company, link: job.link});
   });
-
   res.json(jobsCollection);
 });
 
@@ -18,8 +17,10 @@ jobsRouter.get("/", function showAllJobs(req, res, next) {
 **/
 function addAJob(req, res, next) {
   console.log("This shows req.body", req.body);
-
+  let newJob = req.body;
+  newJob.createTime = Date.now();
   jobs.push(req.body);
+  console.log(newJob.createTime);
 
   res.json({message: 'I sucessfully posted to the rosaCO site'});
 }

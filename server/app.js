@@ -4,9 +4,10 @@ const bodyParser = require("body-parser");
 
 require('./database-setup');
 
+let app = express();
+
 app.use(express.static(__dirname + "/../client"));
 
-let app = express();
 app.use(bodyParser.json());
 
 app.use( "/jobs", require("./routes/jobs.routes") );

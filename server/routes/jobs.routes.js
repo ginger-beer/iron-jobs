@@ -32,7 +32,6 @@ jobsRouter.get("/", showAllJobs);
   * @return {void}
 **/
 function addAJob(req, res, next) {
-  console.log("This shows req.body", req.body);
 
   if (!req.body.company || !req.body.link || !req.body.notes) {
     let err = new Error("Please give required job information");
@@ -41,12 +40,18 @@ function addAJob(req, res, next) {
   }
   //TODO check for empty string entry as company, link, notes
 
-  let newJob = { company: req.body.company, link: req.body.link, notes: req.body.notes };
+  let newJob = new Job({ company: req.body.company, link: req.body.link, notes: req.body.notes });
   newJob.createTime = Date.now();
-  newJob.id = JSON.stringify(Date.now());
-  jobs.push(newJob);
-
-  res.json({message: 'I sucessfully posted to the rosaCO site'});
+  newJob.save()
+    .then(function madeNewJob() {
+      res.json({message: 'I sucessfully posted to the rosaCO site'});
+    })
+    .catch(function errHandler(err) {
+      console.error(err);
+      let theErr = new Error("Could not save to the database");
+      theErr.status = 500;
+      return next(theErr);
+    });
 }
 jobsRouter.post("/", addAJob);
 

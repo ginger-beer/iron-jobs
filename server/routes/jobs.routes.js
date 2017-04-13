@@ -44,7 +44,8 @@ function addAJob(req, res, next) {
   newJob.createTime = Date.now();
   newJob.save()
     .then(function madeNewJob(newJob) {
-      res.json(newJob);
+      output = {id: newJob.id, company: newJob.company, link: newJob.link, notes: newJob.notes, createTime: newJob.createTime};
+      res.json(output);
     })
     .catch(function errHandler(err) {
       console.error(err);
@@ -65,7 +66,6 @@ function showSpecificJob(req, res, next) {
 
   Job.findById(req.params.id)
     .then(function sendBackSpecificJob(data) {
-      console.log(data, "This is data");
       if (!data) {
         let err = new Error("No job with that ID");
         err.status = 404;
@@ -90,12 +90,25 @@ jobsRouter.get("/:id", showSpecificJob);
   * @return {void}
 **/
 function deleteSpecificJob(req, res, next) {
-  jobs.find(function jobToDelete(job, index) {
-     if (job.id === req.params.id) {
-       res.json(job);
-       jobs.splice(index, 1);
-     }
-  });
+  Job.findById(req.params.id)
+    .then(function deleteTheSelectedJob(data) {
+      if (!data) {
+        let err = new Error("No job with that ID");
+        err.status = 404;
+        return next(err);
+      }
+
+      output = {id: data.id, company: data.company, link: data.link, notes: data.notes, createTime: data.createTime};
+      res.json(output);
+
+      Job.remove(data.id);
+    })
+    .catch(function errHandler(err) {
+      console.error(err);
+      let theErr = new Error("Failed to delete by ID.");
+      theErr.status = 500;
+      return next(theErr);
+    });
 }
 jobsRouter.delete("/:id", deleteSpecificJob);
 

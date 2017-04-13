@@ -62,10 +62,22 @@ jobsRouter.post("/", addAJob);
   * @return {void}
 **/
 function showSpecificJob(req, res, next) {
-  let correctJob = jobs.filter(function specificJobId(job) {
-    return job.id === req.params.id;
-  });
-  res.json(correctJob);
+
+  Job.findById(req.params.id)
+    .then(function sendBackSpecificJob(data) {
+      if (!data) {
+        let err = new Error("No job with that ID");
+        err.status = 404;
+        return next(err);
+      }
+      res.json({jobRequested: data});
+    })
+    .catch(function errHandler(err) {
+      console.error(err);
+      let theErr = new Error("Failed to search for ID.");
+      theErr.status = 500;
+      return next(theErr);
+    });
 }
 jobsRouter.get("/:id", showSpecificJob);
 

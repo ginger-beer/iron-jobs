@@ -43,8 +43,8 @@ function addAJob(req, res, next) {
   let newJob = new Job({ company: req.body.company, link: req.body.link, notes: req.body.notes });
   newJob.createTime = Date.now();
   newJob.save()
-    .then(function madeNewJob() {
-      res.json({message: 'I sucessfully posted to the rosaCO site'});
+    .then(function madeNewJob(newJob) {
+      res.json(newJob);
     })
     .catch(function errHandler(err) {
       console.error(err);
@@ -65,12 +65,13 @@ function showSpecificJob(req, res, next) {
 
   Job.findById(req.params.id)
     .then(function sendBackSpecificJob(data) {
+      console.log(data, "This is data");
       if (!data) {
         let err = new Error("No job with that ID");
         err.status = 404;
         return next(err);
       }
-      res.json({jobRequested: data});
+      res.json({data});
     })
     .catch(function errHandler(err) {
       console.error(err);

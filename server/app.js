@@ -6,11 +6,11 @@ require('./database-setup');
 
 let app = express();
 
-app.use(express.static(__dirname + "/../client"));
+app.use(express.static(__dirname + "/../client/public/"));
 
 app.use(bodyParser.json());
 
-app.use( "/jobs", require("./routes/jobs.routes") );
+app.use( "/api/jobs", require("./routes/jobs.routes") );
 
 app.use(require("./middleware/error-handler.middleware"));
 

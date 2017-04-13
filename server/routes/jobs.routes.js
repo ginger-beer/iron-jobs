@@ -71,7 +71,8 @@ function showSpecificJob(req, res, next) {
         err.status = 404;
         return next(err);
       }
-      res.json(data);
+      output = {id: data.id, company: data.company, link: data.link, notes: data.notes, createTime: data.createTime};
+      res.json(output);
     })
     .catch(function errHandler(err) {
       console.error(err);

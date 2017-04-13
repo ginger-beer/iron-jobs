@@ -9,17 +9,18 @@ const Job = require("../models/Job.model");
  * @return {void}
  */
 function showAllJobs(req, res, next) {
-  let jobsCollection = [];
-
-  if (!Array.isArray(jobs)) {
-      let err = new Error("Jobs is no longer an array");
-      err.status = 500;
-      return next(err);
-  }
-
-  res.json(jobs.map(function infoWeNeed(job) {
-    return ({id: job.id, company: job.company, link: job.link});
-  }));
+  Job.find()
+    .then(function functionName(jobInfo) {
+      res.json(jobInfo.map(function infoWeNeed(job) {
+        return ({id: job.id, company: job.company, link: job.link});
+      }));
+    })
+    .catch(function errHandler(err) {
+      console.error(err);
+      let theErr = new Error("Unable to get the jobs from the database.");
+      theErr.status = 500;
+      return next(theErr);
+    });
 }
 jobsRouter.get("/", showAllJobs);
 

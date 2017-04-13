@@ -15,4 +15,10 @@ In order to delete a job posting, turn postman to delete and type in a url in th
 as we wrote to show one specific job. That will delete that one job with that specific ID.
 
 Finally, if not all of the correct information was put in to create a new job posting,  
-you will get a message asking for all of the required information.   
+you will get a message asking for all of the required information.  
+
+## Created by
+Robby Dore & Sarah Smith
+
+## GitHub url
+https://github.com/ginger-beer/iron-jobs 

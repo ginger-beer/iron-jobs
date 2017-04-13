@@ -4,6 +4,8 @@ const bodyParser = require("body-parser");
 
 require('./database-setup');
 
+app.use(express.static(__dirname + "/../client"));
+
 let app = express();
 app.use(bodyParser.json());
 

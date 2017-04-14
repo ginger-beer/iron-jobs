@@ -14,12 +14,9 @@ let output = require("../helper/response.helper");
  * @return {void}
  */
 function showAllJobs(req, res, next) {
-  console.log(req.query.query, "This is req.Query");
   if (req.query.query) {
     Job.find({ company: {$regex: req.query.query, $options: 'i'}})
       .then(function sendBackMatchingJobs(data) {
-        console.log(req.query, "req.query THIS IS ME");
-
         res.json(data);
       })
       .catch(function errHandler(err) {

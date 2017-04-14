@@ -2,6 +2,10 @@ const jobsRouter = require('express').Router();
 
 const Job = require("../models/Job.model");
 
+// function searchJobs(req, res, next) {
+//
+// }
+
 /**
  * Show all of the jobs
  * @param  {Object}     res  Shows all of the jobs
@@ -9,18 +13,34 @@ const Job = require("../models/Job.model");
  * @return {void}
  */
 function showAllJobs(req, res, next) {
-  Job.find()
-    .then(function functionName(jobInfo) {
-      res.json(jobInfo.map(function infoWeNeed(job) {
-        return ({id: job.id, company: job.company, link: job.link});
-      }));
-    })
-    .catch(function errHandler(err) {
-      console.error(err);
-      let theErr = new Error("Unable to get the jobs from the database.");
-      theErr.status = 500;
-      return next(theErr);
-    });
+  console.log(req.query.query, "This is req.Query");
+  if (req.query.query) {
+    Job.find({ company: {$regex: req.query.query, $options: 'i'}})
+      .then(function sendBackMatchingJobs(data) {
+        console.log(req.query, "req.query THIS IS ME");
+
+        res.json(data);
+      })
+      .catch(function errHandler(err) {
+        console.error(err);
+        let theErr = new Error("Unable to search jobs.");
+        theErr.status = 500;
+        return next(theErr);
+      });
+  } else {
+    Job.find()
+      .then(function findJobInfo(jobInfo) {
+        res.json(jobInfo.map(function infoWeNeed(job) {
+          return ({id: job.id, company: job.company, link: job.link});
+        }));
+      })
+      .catch(function errHandler(err) {
+        console.error(err);
+        let theErr = new Error("Unable to get the jobs from the database.");
+        theErr.status = 500;
+        return next(theErr);
+      });
+  }
 }
 jobsRouter.get("/", showAllJobs);
 

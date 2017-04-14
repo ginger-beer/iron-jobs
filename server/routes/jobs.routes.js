@@ -1,6 +1,7 @@
 const jobsRouter = require('express').Router();
 
 const Job = require("../models/Job.model");
+let output = require("../helper/response.helper");
 
 // function searchJobs(req, res, next) {
 //
@@ -64,8 +65,7 @@ function addAJob(req, res, next) {
   newJob.createTime = Date.now();
   newJob.save()
     .then(function madeNewJob(newJob) {
-      output = {id: newJob.id, company: newJob.company, link: newJob.link, notes: newJob.notes, createTime: newJob.createTime};
-      res.json(output);
+      res.json(output(newJob));
     })
     .catch(function errHandler(err) {
       console.error(err);
@@ -91,8 +91,7 @@ function showSpecificJob(req, res, next) {
         err.status = 404;
         return next(err);
       }
-      output = {id: data.id, company: data.company, link: data.link, notes: data.notes, createTime: data.createTime};
-      res.json(output);
+      res.json(output(data));
     })
     .catch(function errHandler(err) {
       console.error(err);
@@ -118,8 +117,7 @@ function deleteSpecificJob(req, res, next) {
         return next(err);
       }
 
-      output = {id: data.id, company: data.company, link: data.link, notes: data.notes, createTime: data.createTime};
-      res.json(output);
+      res.json(output(data));
       Job.remove({ _id: data.id}, function callbackFun() {
         console.log(data.id, 'has been deleted');
       });

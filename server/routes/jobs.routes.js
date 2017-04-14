@@ -3,10 +3,6 @@ const jobsRouter = require('express').Router();
 const Job = require("../models/Job.model");
 let output = require("../helper/response.helper");
 
-// function searchJobs(req, res, next) {
-//
-// }
-
 /**
  * Show all of the jobs
  * @param  {Object}     res  Shows all of the jobs
@@ -14,31 +10,30 @@ let output = require("../helper/response.helper");
  * @return {void}
  */
 function showAllJobs(req, res, next) {
+  let mongoQuery = {};
+
   if (req.query.query) {
-    Job.find({ company: {$regex: req.query.query, $options: 'i'}})
-      .then(function sendBackMatchingJobs(data) {
-        res.json(data);
-      })
-      .catch(function errHandler(err) {
-        console.error(err);
-        let theErr = new Error("Unable to search jobs.");
-        theErr.status = 500;
-        return next(theErr);
-      });
-  } else {
-    Job.find()
-      .then(function findJobInfo(jobInfo) {
-        res.json(jobInfo.map(function infoWeNeed(job) {
-          return ({id: job.id, company: job.company, link: job.link});
-        }));
-      })
-      .catch(function errHandler(err) {
-        console.error(err);
-        let theErr = new Error("Unable to get the jobs from the database.");
-        theErr.status = 500;
-        return next(theErr);
-      });
+    mongoQuery = {
+      $or: [
+        { company: {$regex: req.query.query, $options: 'i'}},
+        { notes: {$regex: req.query.query, $options: 'i'}}
+      ]
+    };
   }
+  console.log(mongoQuery, "Mongo Query~~~");
+
+  Job.find(mongoQuery)
+    .then(function findJobInfo(jobInfo) {
+      res.json(jobInfo.map(function infoWeNeed(job) {
+        return ({id: job.id, company: job.company, link: job.link});
+      }));
+    })
+    .catch(function errHandler(err) {
+      console.error(err);
+      let theErr = new Error("Unable to get the jobs from the database.");
+      theErr.status = 500;
+      return next(theErr);
+    });
 }
 jobsRouter.get("/", showAllJobs);
 

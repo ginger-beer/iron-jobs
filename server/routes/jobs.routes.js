@@ -100,8 +100,9 @@ function deleteSpecificJob(req, res, next) {
 
       output = {id: data.id, company: data.company, link: data.link, notes: data.notes, createTime: data.createTime};
       res.json(output);
-
-      Job.remove(data.id);
+      Job.remove({ _id: data.id}, function callbackFun() {
+        console.log(data.id, 'has been deleted');
+      });
     })
     .catch(function errHandler(err) {
       console.error(err);
